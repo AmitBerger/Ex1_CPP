@@ -14,7 +14,7 @@ struct AdptArray_ {
 
 PAdptArray CreateAdptArray(COPY_FUNC copyFunc, DEL_FUNC delFunc, PRINT_FUNC printFunc) {
     PAdptArray array = (PAdptArray) malloc(sizeof(struct AdptArray_));
-    array->data = (PElement*) realloc(0, sizeof(PElement));
+    array->data = (PElement*) calloc(0, sizeof(PElement));
     array->size = 0;
     array->copyFunc = copyFunc;
     array->delFunc = delFunc;
