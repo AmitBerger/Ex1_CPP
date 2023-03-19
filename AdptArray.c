@@ -5,93 +5,97 @@
 
 
 struct AdptArray_ {
-    PElement* data;
-    int size;
+    PElement* AnyData;
+    int AdptArraySize;
     COPY_FUNC copyFunc;
     DEL_FUNC delFunc;
     PRINT_FUNC printFunc;
 };
 
 PAdptArray CreateAdptArray(COPY_FUNC copyFunc, DEL_FUNC delFunc, PRINT_FUNC printFunc) {
-    PAdptArray array = (PAdptArray) malloc(sizeof(struct AdptArray_));
-    array->data = (PElement*) calloc(0, sizeof(PElement));
-    array->size = 0;
-    array->copyFunc = copyFunc;
-    array->delFunc = delFunc;
-    array->printFunc = printFunc;
-    return array;
+    PAdptArray AdpArray = (PAdptArray) malloc(sizeof(struct AdptArray_));
+    AdpArray->AnyData = (PElement*) calloc(0, sizeof(PElement));
+    AdpArray->AdptArraySize = 0;
+    AdpArray->copyFunc = copyFunc;
+    AdpArray->delFunc = delFunc;
+    AdpArray->printFunc = printFunc;
+    return AdpArray;
 }
 
-void DeleteAdptArray(PAdptArray array) {
-    if (array == NULL) return ;
+void DeleteAdptArray(PAdptArray AdpArray) {
+    if (AdpArray == NULL) return ;
 
-    for (int i = 0; i < array->size; i++) {
-        if (array->data[i] != NULL) {
-            array->delFunc(array->data[i]);
+    for (int i = 0; i < AdpArray->AdptArraySize; i++) {
+        if (AdpArray->AnyData[i] != NULL) {
+            AdpArray->delFunc(AdpArray->AnyData[i]);
         }
     }
 
-    free(array->data);
-    free(array);
+    free(AdpArray->AnyData);
+    free(AdpArray);
 }
 
-Result SetAdptArrayAt(PAdptArray array, int index, PElement element) {
-    if (array == NULL || index < 0) {
+Result SetAdptArrayAt(PAdptArray AdpArray, int index, PElement element) {
+    if (AdpArray == NULL || index < 0) {
         return FAIL;
     }
 
-    if (index >= array->size) {
+    if (index >= AdpArray->AdptArraySize) {
         int newSize = index +1;
-        PElement* newData = (PElement*) realloc(array->data, newSize * sizeof(PElement));
+        PElement* newData = (PElement*) realloc(AdpArray->AnyData, newSize * sizeof(PElement));
         if (newData == NULL) {
             return FAIL;
         }
-        array->data = newData;
-        for (int i = array->size; i < newSize; i++) {
-            array->data[i] = NULL;
+        AdpArray->AnyData = newData;
+        for (int i = AdpArray->AdptArraySize; i < newSize; i++) {
+            AdpArray->AnyData[i] = NULL;
         }
-        array->size = newSize;
+        AdpArray->AdptArraySize = newSize;
     }
 
-    if (array->data[index] != NULL) {
-        array->delFunc(array->data[index]);
+    if (AdpArray->AnyData[index] != NULL) {
+        AdpArray->delFunc(AdpArray->AnyData[index]);
     }
 
-    array->data[index] = array->copyFunc(element);
+    AdpArray->AnyData[index] = AdpArray->copyFunc(element);
 
     return SUCCESS;
 }
 
-PElement GetAdptArrayAt(PAdptArray array, int index) {
-    if (array == NULL || index < 0 || index >= array->size) {
+PElement GetAdptArrayAt(PAdptArray AdpArray, int index) {
+    if (AdpArray == NULL || index < 0 || index >= AdpArray->AdptArraySize) {
         return NULL;
     }
-    if (array->data[index]==NULL)
+    if (AdpArray->AnyData[index]==NULL)
     {
         return NULL;
     }
     
-    return array->copyFunc(array->data[index]);
+    return AdpArray->copyFunc(AdpArray->AnyData[index]);
 
    
 }
 
-int GetAdptArraySize(PAdptArray array) {
-    if (array == NULL) {
+int GetAdptArraySize(PAdptArray AdpArray) {
+    if (!AdpArray) {
+        return -1;
+    }
+    if (AdpArray == NULL) {
         return 0;
     }
 
-    return array->size;
+    return AdpArray->AdptArraySize;
 }
 
-void PrintDB(PAdptArray array) {
-    if (array == NULL) {
+void PrintDB(PAdptArray AdpArray) {
+    if (AdpArray == NULL) {
         return;
     }
 
-    for (int i = 0; i < array->size; i++) {
-        if (array->data[i] != NULL) {
-            array->printFunc(array->data[i]);
+    for (int i = 0; i < AdpArray->AdptArraySize; i++) {
+        if (AdpArray->AnyData[i] != NULL) {
+            AdpArray->printFunc(AdpArray->AnyData[i]);
         }
     }
 }
+
